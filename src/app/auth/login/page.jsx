@@ -1,15 +1,26 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
-//import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 //import { useState } from 'react'
 
 function LoginPage() {
     const { register, handleSubmit, formState: { errors } } = useForm()
+    const router = useRouter()
 
 const onSubmit = handleSubmit(async (data) =>{
     console.log(data);
-    signIn
+    const res = await signIn('credentials', {
+        username: data.username,
+        password: data.contrasena,
+        redirect: false,
+    });
+    if(res.error){
+        alert(res.error);
+    }else{
+        router.push('/dasborad')
+    }
+    console.log(res);
 });
 
     return (

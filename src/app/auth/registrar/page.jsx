@@ -22,6 +22,7 @@ function RegisterPage() {
         }*/
         console.log(res);
     });
+    console.log(errors);
 
     return (
         <>

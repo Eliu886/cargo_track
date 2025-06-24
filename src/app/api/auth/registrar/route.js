@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import bcrypt from "bcrypt";
 import { prisma } from '@/libs/db'
 
 export async function POST(request) {
     try {
         const data = await request.json()
 
-        const userEmail = await prisma.findUnique({
+        const userEmail = await prisma.usuarios.findUnique({
             where: {
                 email: data.email
             }
@@ -18,7 +19,7 @@ export async function POST(request) {
             })
         }
 
-        const userName = await prisma.findUnique({
+        const userName = await prisma.usuarios.findUnique({
             where: {
                 username: data.username
             }
@@ -30,13 +31,21 @@ export async function POST(request) {
                 status: 400
             })
         }
-
+        const contrahash = await bcrypt.hash(data.contrasena, 10);
         const newUser = await prisma.usuarios.create({
-            data
+            data: {
+                nombre: data.nombre,
+                apellido: data.apellido,
+                username: data.username,
+                contrasena: contrahash,
+                email: data.email,
+                rol: data.rol,
+            },
         });
 
         return NextResponse.json(newUser);
     } catch (error) {
+        console.error("Error al registrar usuario:", error);
         return NextResponse.json(
             {
                 message: error.message,

@@ -23,3 +23,10 @@ model usuarios {
   email String @unique
   rol String
 }
+
+model almacen {
+  codigo Int @id
+  linea String @unique
+  linea2 String
+  telefono String @unique
+}
