@@ -2,30 +2,34 @@
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from 'next/navigation'
-//import { useState } from 'react'
+import { useState } from 'react'
 
 function LoginPage() {
     const { register, handleSubmit, formState: { errors } } = useForm()
     const router = useRouter()
+    const [error, setError] = useState(null)
 
-const onSubmit = handleSubmit(async (data) =>{
-    console.log(data);
-    const res = await signIn('credentials', {
-        username: data.username,
-        password: data.contrasena,
-        redirect: false,
+    const onSubmit = handleSubmit(async (data) => {
+        console.log(data);
+        const res = await signIn('credentials', {
+            username: data.username,
+            password: data.contrasena,
+            redirect: false,
+        });
+        if (res.error) {
+            setError(res.error)
+        } else {
+            router.push('/dasborad')
+        }
+        console.log(res);
     });
-    if(res.error){
-        alert(res.error);
-    }else{
-        router.push('/dasborad')
-    }
-    console.log(res);
-});
 
     return (
         <div className="h-screen w-screen flex justify-center items-center bg-[url('/barco.jpg')] bg-cover bg-center">
             <form onSubmit={onSubmit} className="py-5 px-10 w-1/4 rounded-xl bg-black/70 shadow-2xl">
+                {error && (
+                    <p className="bg-red-500/70 text-lg text-white p-3 rounded mb-2">{error}</p>
+                )}
                 <h1 className="text-slate-200 font-bold text-4xl mb-4">
                     Login
                 </h1>

@@ -13,6 +13,12 @@ function AlmacenPage() {
             },
 
         });
+        if (res.error) {
+            alert(res.error);
+        } else {
+            alert("Almacen Regitrado");
+        }
+
     });
     return (
         <>
